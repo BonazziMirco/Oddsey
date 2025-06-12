@@ -1,0 +1,37 @@
+<div style="overflow-x:scroll; white-space: nowrap;">
+  <table class="table table-striped table-hover table-dark">
+    <thead>
+    <tr>
+      <th scope="col" class="text-center">ID</th>
+      <th scope="col" class="text-center">Nome</th>
+      <th scope="col" class="text-center">Cognome</th>
+      <th scope="col" class="text-center">Data di nascita</th>
+      <th scope="col" class="text-center">E-mail</th>
+      <th scope="col" class="text-center">Username</th>
+      <th scope="col" class="text-center">Ruolo</th>
+      <th scope="col" class="text-center">Vittorie</th>
+      <th scope="col" class="text-center">Classifica</th>
+      <th scope="col" class="text-center">Premi vinti</th>
+      <th scope="col" class="text-center">Scommesse giocate</th>
+      <th scope="col" class="text-center">Foto profilo</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr th:each="user : ${userList}">
+      <th scope="row" class="text-center" th:text="${user.id}"></th>
+      <td class="text-center" th:text="${user.firstName}"></td>
+      <td class="text-center" th:text="${user.lastName}"></td>
+      <td class="text-center" th:text="${user.birthdate}"></td>
+      <td class="text-center" th:text="${user.email}"></td>
+      <td class="text-center" th:text="${user.username}"></td>
+      <td class="text-center" th:text="${user.role}"></td>
+      <td class="text-center" th:text="${user.wins}"></td>
+      <td class="text-center" th:text="${user.rank}"></td>
+      <td class="text-center" th:text="${user.prizes}"></td>
+      <td class="text-center" th:text="${user.plays}"></td>
+      <td class="text-center" th:if="${user.propic} != null"><i class="bi bi-check-lg"></i></td>
+      <td class="text-center" th:if="${user.propic} == null"><i class="bi bi-x-lg"></i></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

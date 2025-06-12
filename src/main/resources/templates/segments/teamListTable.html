@@ -1,0 +1,14 @@
+<table class="table table-striped table-hover table-dark">
+    <thead>
+    <tr>
+        <th scope="col" class="text-center">ID</th>
+        <th scope="col">Nome squadra</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr th:each="team : ${teamList}">
+        <th scope="row" class="text-center" th:text="${team.id}"></th>
+        <td th:text="${team.teamName}"></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,119 @@
+.card-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.sponsor {
+    height: 50vh;
+    object-fit: contain;
+    width: 100%;
+}
+
+.propic {
+    height: 30vh;
+    object-fit: contain;
+    width: 100%;
+}
+
+.bi-star, .bi-star-fill {color: gold}
+#logo {max-width: 80vw; min-width: 50vw}
+body {background-image: url("images/carbon_fiber_background.jpg");}
+h1, h3 {color: darkgoldenrod; text-align: center}
+p, label {color: white; text-align: center}
+.reviewData, .newsData{text-align: right}
+.reviewText, .newsContent {text-align: left}
+.nav-link {color: darkgoldenrod}
+.nav-item .nav-link.active {color: gold}
+.bi-newspaper {font-size: 26px}
+
+.btn-group-vertical {
+    height: auto; /* Content determines the height */
+    display: block; /* Default block behavior for vertical layout */
+    flex-shrink: 0; /* Prevent shrinking in case of flex/grid use */
+}
+
+#logout-btn{
+    max-width: 80vw;
+    min-width: 50vw
+}
+
+.btn-primary {
+    background-color: darkgoldenrod;
+    border-color: darkgoldenrod;
+    color: black;
+    --bs-btn-focus-color: black;
+    --bs-btn-focus-bg: goldenrod;
+    --bs-btn-focus-border-color: goldenrod;
+    --bs-btn-focus-shadow-rgb: darkgoldenrod;
+    --bs-btn-active-color: black;
+    --bs-btn-active-bg: goldenrod;
+    --bs-btn-active-border-color: goldenrod
+}
+
+.btn-primary:disabled {
+    background-color: darkgoldenrod;
+    border-color: darkgoldenrod;
+    color: black;
+}
+
+.btn-primary:hover, .btn-group-vertical .btn-primary:hover {
+    background-color: goldenrod;
+    border-color: goldenrod;
+    color: black;
+}
+
+#slate {
+    background-color: slategrey;
+    border-radius: 15px;
+    color: white;
+}
+
+#messageMatch{
+    display: none;
+    font-size: 18px;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+    display:none;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+#message p {
+    padding: 10px 35px;
+    font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+    color: red;
+}
+
+.invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+}
+
+#news {
+    position: fixed;
+    bottom: 5vh;
+    right: 5vw;
+    z-index: 100;
+}

@@ -1,0 +1,19 @@
+<h1>Partite di <span th:text="${sport}"></span></h1>
+<table class="table table-striped table-hover table-dark">
+    <thead>
+    <tr id="table-header">
+        <th scope="col" class="text-center">ID</th>
+        <th scope="col" class="text-center">Data</th>
+        <th scope="col" class="text-center">Squadra di casa</th>
+        <th scope="col" class="text-center">Squadra ospite</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" id="table-body">
+    <tr th:each="match, iterStat : ${matchList}">
+        <th scope="row" class="text-center" th:text="${match.id}"></th>
+        <td th:text="${match.matchDate}" class="text-center"></td>
+        <td th:text="${match.homeTeam}" class="text-center"></td>
+        <td th:text="${match.awayTeam}" class="text-center"></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+<ul class="nav nav-tabs" data-bs-theme="dark">
+    <li class="nav-item">
+        <a class="nav-link" id="home-tab" th:href="@{/index}">Home</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="sport-tab-list">Sports</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" id="rowing-tab" th:href="@{/rowing}">Rowing</a></li>
+            <li><a class="dropdown-item" id="dragonBoatRacing-tab" th:href="@{/dragonBoatRacing}">Dragon boat racing</a></li>
+            <li><a class="dropdown-item" id="rafting-tab" th:href="@{/rafting}">Rafting</a></li>
+        </ul>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="sponsors-tab" th:href="@{/sponsors}">Sponsors</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="reviews-tab" th:href="@{/reviews}">Recensioni</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" aria-disabled="true" th:unless="${logged}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="dashboard-tab" th:href="@{/dashboard}" th:if="${logged}">Dashboard</a>
+    </li>
+    <li class="nav-item ms-auto">
+        <a class="nav-link" id="login-tab" th:href="@{/login}" th:unless="${logged}">Accedi</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="signup-tab" th:href="@{/signup}" th:unless="${logged}">Iscriviti</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="logout-tab" th:href="@{/perform_logout}" th:if="${logged}">Esci</a>
+    </li>
+</ul>
+<div th:replace="~{segments/news.html}"></div>
+<br>

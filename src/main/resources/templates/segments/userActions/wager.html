@@ -1,0 +1,29 @@
+<h1>Partite di <span th:text="${sport}"></span> del <span th:text="${date}"></span></h1>
+<table class="table table-striped table-hover table-dark">
+    <thead>
+    <tr id="table-header">
+        <th scope="col" class="text-center">ID</th>
+        <th scope="col" class="text-center">Squadra di casa</th>
+        <th scope="col" class="text-center">Squadra ospite</th>
+        <th scope="col" class="text-center">Pronostico</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" id="table-body">
+    <tr th:each="match : ${matchList}">
+        <th scope="row" class="text-center" th:text="${match.id}"></th>
+        <td th:text="${match.homeTeam}" class="text-center"></td>
+        <td th:text="${match.awayTeam}" class="text-center"></td>
+        <td>
+            <div class="form-floating">
+                <input class="form-control" list="datalistOptions" placeholder="Scegliere 0, 1 o 2:" data-bs-theme="dark">
+                <datalist id="datalistOptions">
+                    <option value="0"></option>
+                    <option value="1"></option>
+                    <option value="2"></option>
+                </datalist>
+                <label class="form-label">Scegliere 0, 1 o 2:</label>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
