@@ -18,7 +18,7 @@
             <td class="text-center" th:text="${user.birthdate}"></td>
             <td class="text-center" th:text="${user.email}"></td>
             <td class="text-center" th:text="${user.username}"></td>
-            <td><button class="btn btn-primary" th:onclick="promote([[${user.id}]])">Promuovi</button></td>
+            <td><button class="btn btn-primary" th:onclick="'promote(' + ${user.id} + ')'">Promuovi</button></td>
         </tr>
         </tbody>
     </table>
