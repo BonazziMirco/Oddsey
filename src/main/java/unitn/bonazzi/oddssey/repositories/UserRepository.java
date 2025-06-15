@@ -1,5 +1,6 @@
 package unitn.bonazzi.oddssey.repositories;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import unitn.bonazzi.oddssey.pojos.SecurityUser;
 import unitn.bonazzi.oddssey.pojos.User;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,10 +31,22 @@ public class UserRepository {
         return userDetailsManager.userExists(username);
     }
 
+    public List<User>  getRankingList(){
+        String sql = "SELECT username, SUM(points) as tot_punti  FROM giornate GROUP BY username ORDER BY points DESC";
+
+        RowMapper<User> rankingRowMapper = (r, i) -> {
+            User user = new User();
+            user.setUsername(r.getString("username"));
+            user.setPoints(r.getInt("tot_punti"));
+            user.setRank(i + 1);
+            return user;
+        };
+        return jdbc.query(sql, rankingRowMapper);
+    }
+
     public User userData(String username) {
         String sql =    "SELECT * FROM userdata " +
                         "JOIN authorities ON userdata.id = authorities.id " +
-                        "JOIN giornate ON giornate.id= userdata.id " +
                         "WHERE userdata.USERNAME = ?";
         RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
             User user = new User();
@@ -44,8 +57,8 @@ public class UserRepository {
             user.setEmail(resultSet.getString("EMAIL"));
             user.setUsername(resultSet.getString("USERNAME"));
             user.setRole(resultSet.getString("AUTHORITY"));
-            user.setPlays(resultSet.getInt("WAGERS"));
-            user.setWins(resultSet.getInt("WINS"));
+            user.setSport(resultSet.getString("SPORT"));
+            user.setTeam(resultSet.getString("TEAM"));
 
             Blob propicBlob = resultSet.getBlob("PROPIC");
             if (propicBlob != null) {
@@ -56,27 +69,26 @@ public class UserRepository {
         };
         User user = jdbc.queryForObject(sql,userRowMapper, username);
 
-
-        sql =    "SELECT wins FROM userdata " +
-                "JOIN giornate ON giornate.id= userdata.id " +
-                "WHERE USERNAME = ? ";
-        RowMapper<Integer> winsRowMapper = (resultSet, rowNum) -> {
-            return resultSet.getInt("WINS");
-        };
-        int vittorie = jdbc.queryForObject(sql,winsRowMapper, username);
-
-
-        sql =    "SELECT COUNT(id) AS ranking FROM giornate WHERE wins > ? ";
-        winsRowMapper = (resultSet, rowNum) -> {
-            return resultSet.getInt("ranking");
-        };
-        user.setRank(jdbc.queryForObject(sql,winsRowMapper, vittorie) + 1);
-
         sql =   "SELECT COUNT(name) AS n_premi FROM PREMI WHERE winner = ? ";
-        winsRowMapper = (resultSet, rowNum) -> {
-            return resultSet.getInt("n_premi");
-        };
-        user.setPrizes(jdbc.queryForObject(sql,winsRowMapper, username));
+        RowMapper<Integer> intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_premi");
+        user.setPrizes(jdbc.queryForObject(sql,intRowMapper, username));
+
+        sql =   "SELECT COUNT(*) AS n_giornate FROM giornate WHERE USERNAME = ?";
+        intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_giornate");
+        user.setPlays(jdbc.queryForObject(sql, intRowMapper, username));
+
+        sql =   "SELECT COUNT(*) AS n_giornate FROM giornate WHERE USERNAME = ?";
+        intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_giornate");
+        user.setPlays(jdbc.queryForObject(sql, intRowMapper, username));
+
+        List<User> rankingList = this.getRankingList();
+        for (int i = 0; i < rankingList.size(); i++) {
+            if(rankingList.get(i).getUsername().equals(username)) {
+                user.setRank(i + 1);
+                user.setPoints(rankingList.get(i).getPoints());
+                break;
+            }
+        }
 
         return user;
     }
@@ -98,21 +110,6 @@ public class UserRepository {
         return users;
     }
 
-    public List<User> getRankinList(){
-        String sql = "SELECT id FROM giornate ORDER BY wins DESC";
-        RowMapper<String> idRowMapper = (r, i) -> r.getString("id");
-        List<Integer> ids = jdbc.queryForList(sql, Integer.class);
-        List<String> usernames = new ArrayList<>();
-        for (Integer id : ids) {
-            usernames.add(this.getUsername(id));
-        }
-        List<User> users = new ArrayList<>();
-        for (String username : usernames) {
-            users.add(this.userData(username));
-        }
-        return users;
-    }
-
     public void addUser(User user) {
         String sql =    "INSERT INTO userdata VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbc.update(sql,
@@ -125,8 +122,6 @@ public class UserRepository {
                 user.getTeam(),
                 user.getPropic()
         );
-        sql =    "INSERT INTO giornate VALUES (DEFAULT, 0, 0)";
-        jdbc.update(sql);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDetailsManager.createUser(new SecurityUser(user));
     }
@@ -159,10 +154,15 @@ public class UserRepository {
         String sql = "UPDATE authorities SET authority = 'ROLE_MODERATOR' WHERE id = ?";
         jdbc.update(sql, id);
     }
-//
-//    public int getUserId(String username) {
-//        String sql = "SELECT id FROM userdata WHERE username = ?";
-//        RowMapper<Integer> idRowMapper = (r, i) -> r.getInt("id");
-//        return jdbc.queryForObject(sql, idRowMapper, username);
-//    }
+
+    public boolean changePassword(String username, String newPassword, String oldPassword) {
+        String sql = "SELECT password FROM users WHERE username = ?";
+        RowMapper<String> passwordRowMapper = (r, i) -> r.getString("password");
+        String currentPassword = jdbc.queryForObject(sql, passwordRowMapper, username);
+        boolean result = passwordEncoder.matches(oldPassword, currentPassword);
+        if (result) {
+            userDetailsManager.changePassword(passwordEncoder.encode(oldPassword), passwordEncoder.encode(newPassword));
+        }
+        return result;
+    }
 }

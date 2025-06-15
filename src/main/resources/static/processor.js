@@ -212,13 +212,11 @@ function getNews(){
             if (response.status !== 200) {
                 console.log(response.status);
                 throw new Error("Errore nel loading del file JSON");}
-            console.log("a")
             return response.json();
         })
         .then(function (json) {
             const container = document.getElementById("newsList");
             container.innerHTML = '';
-            console.log("a");
             json.forEach(news => {
                 container.innerHTML += `
                     <div class="card">
@@ -229,7 +227,6 @@ function getNews(){
                         </div>
                     </div>
                 `;
-                console.log("b")
             })
         })
         .catch(function(error){
@@ -238,19 +235,29 @@ function getNews(){
         })
 }
 
+let newsIntervalSet = false;
+function intervalNews(){
+    getNews();
+    if (!newsIntervalSet) {
+        setInterval(getNews, 30000);
+        newsIntervalSet = true;
+    }
+}
+
 function promote(userId) {
     fetch(`/promote`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'userId': userId
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: userId })
     })
         .then(function (response) {
             if (response.status !== 200) {
                 console.log(response.status);
                 throw new Error("Errore nel caricamento della promozione");
             }
+            return response.text();
         })
         .then(function (html) {
             document.getElementById("slate").innerHTML = html;
@@ -259,4 +266,55 @@ function promote(userId) {
             console.log(error);
             document.getElementById("slate").innerHTML = "Error promoting user";
         });
+}
+
+function changePassword() {
+    fetch(`/setNewPassword`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            oldPassword: document.getElementById("oldPassword").value,
+            newPassword: document.getElementById("password").value
+        })
+    })
+        .then(function (response) {
+            if (response.status !== 200) {
+                console.log(response.status);
+                throw new Error("Errore nel caricamento della modifica della password");
+            }
+            return response.text();
+        })
+        .then(function (html) {
+            document.getElementById("slate").innerHTML = html;
+        })
+        .catch(function (error) {
+            console.log(error);
+            document.getElementById("slate").innerHTML = "Error changing password";
+        });
+}
+
+function submitWager() {
+    fetch('/getResults', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            bets: Array.from(document.getElementsByName("bet")).map(el => el.value)
+        })
+    }).then(function (response) {
+        if (response.status !== 200) {
+            console.log(response.status);
+            throw new Error("Errore nel caricamento delle previsioni");
+        }
+        return response.text();
+    }).then(function (html) {
+        //document.getElementById("slate").innerHTML = html;
+        console.log("a");
+    }).catch(function (error) {
+        console.log(error);
+        document.getElementById("slate").innerHTML = "Error setting bets";
+    })
 }

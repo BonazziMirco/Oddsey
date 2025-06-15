@@ -29,7 +29,7 @@
                 <div class="form-floating">
                     <input type="password" id="password" name="password" class="form-control" placeholder="Scrivere qui la password:"
                            pattern="(?=(.*\d){2,})(?=.*[\!\@\#\$\%\^\&\*\(\)\,\.\?\{\}\|\<\>]).{9}"
-                           onchange="validatePasswordLogin()" onblur="hideMessage()" onfocus="showMessage()"
+                           onchange="validatePasswordLogin()" oninput="validatePasswordLogin()" onblur="hideMessage()" onfocus="showMessage()"
                            title="Must contain two digits and one special character, and 9 characters in total" required>
                     <label for="password" class="form-label">Password:</label>
                 </div>

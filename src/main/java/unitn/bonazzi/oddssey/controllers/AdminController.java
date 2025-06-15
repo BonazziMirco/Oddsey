@@ -1,14 +1,11 @@
 package unitn.bonazzi.oddssey.controllers;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import unitn.bonazzi.oddssey.pojos.User;
+import org.springframework.web.bind.annotation.*;
 import unitn.bonazzi.oddssey.repositories.UserRepository;
+
+import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -26,7 +23,7 @@ public class AdminController {
 
     @GetMapping("/rankingList")
     public String rankingList(Model model) {
-        model.addAttribute("userList", userRepository.getRankinList());
+        model.addAttribute("userList", userRepository.getRankingList());
         return "segments/adminActions/userList";
     }
 
@@ -35,16 +32,17 @@ public class AdminController {
         return "segments/userActions/changePassword";
     }
 
-    @RequestMapping("/upgradeUser")
+    @GetMapping("/upgradeUser")
     public String upgradeUser(Model model) {
         model.addAttribute("userList", userRepository.getUsersOnly());
         return "segments/adminActions/promote";
     }
 
     @PostMapping("/promote")
-    public String promote(@RequestParam int userId) {
-        System.out.println("Promoting user with ID: " + userId);
+    public String promote(@RequestBody Map<String, Object> payload, Model model) {
+        int userId = (int) payload.get("userId");
         userRepository.promoteUser(userId);
-        return "redirect:/upgradeUser";
+        model.addAttribute("userList", userRepository.getUsersOnly());
+        return "segments/adminActions/promote"; // returns updated HTML fragment
     }
 }

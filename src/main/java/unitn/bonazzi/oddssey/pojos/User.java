@@ -13,7 +13,7 @@ public class User {
     private String sport;
     private String team;
     private int plays;
-    private int wins;
+    private int points;
     private int prizes;
     private int rank;
     private String role;
@@ -30,7 +30,7 @@ public class User {
         this.sport = "";
         this.team = "";
         this.plays = 0;
-        this.wins = 0;
+        this.points = 0;
         this.prizes = 0;
         this.rank = 0;
         this.role = "";
@@ -48,7 +48,7 @@ public class User {
         this.sport = sport;
         this.team = team;
         this.plays = 0;
-        this.wins = 0;
+        this.points = 0;
         this.prizes = 0;
         this.rank = 0;
         this.role = role;
@@ -65,7 +65,7 @@ public class User {
     public String getSport() {return sport;}
     public String getTeam() {return team;}
     public int getPlays() {return plays;}
-    public int getWins() {return wins;}
+    public int getPoints() {return points;}
     public int getPrizes() {return prizes;}
     public int getRank() {return rank;}
     public String getRole() {return role;}
@@ -81,7 +81,7 @@ public class User {
     public void setSport(String sport) {this.sport = sport;}
     public void setTeam(String team) {this.team = team;}
     public void setPlays(int plays) {this.plays = plays;}
-    public void setWins(int wins) {this.wins = wins;}
+    public void setPoints(int points) {this.points = points;}
     public void setPrizes(int prizes) {this.prizes = prizes;}
     public void setRank(int rank) {this.rank = rank;}
     public void setRole(String role) {this.role = role;}

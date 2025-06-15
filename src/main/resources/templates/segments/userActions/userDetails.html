@@ -2,14 +2,17 @@
 <img class="propic" th:if="${propic != null}" th:src="${propic}" alt="Profile Picture"/>
 <img class="propic" th:unless="${propic != null}" th:src="@{/images/default_user.png}" alt="Profile Picture"/>
 <h3>Informazioni su <span th:text="${username}"></span>:</h3><br>
+<p>Id: <span th:text="${id}"></span></p>
 <p>Nome: <span th:text="${firstName}"></span></p>
 <p>Cognome: <span th:text="${lastName}"></span></p>
 <p>Data di nascita: <span th:text="${birthDate}"></span></p>
 <p>E-mail: <span th:text="${email}"></span></p>
 <p>Username: <span th:text="${username}"></span></p>
+<p>Sport: <span th:text="${sport}"></span></p>
+<p>Squadra: <span th:text="${squadra}"></span></p>
 <p>Ruolo: <span th:text="${role}"></span></p>
-<p>Vittorie: <span th:text="${wins}"></span></p>
-<p>Classifica: <span th:text="${rank}"></span></p>
 <p>Premi vinti: <span th:text="${prizesWon}"></span></p>
 <p>Scommesse giocate: <span th:text="${wagers}"></span></p>
+<p>Posizione in classifica: <span th:text="${rank}"></span></p>
+<p>Punti totali <span th:text="${points}"></span></p>
 <br>
