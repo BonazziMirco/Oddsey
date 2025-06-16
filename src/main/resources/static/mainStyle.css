@@ -117,3 +117,7 @@ p, label {color: white; text-align: center}
     right: 5vw;
     z-index: 100;
 }
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+}

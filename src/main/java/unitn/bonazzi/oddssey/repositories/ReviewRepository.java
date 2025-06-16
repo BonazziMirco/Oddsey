@@ -20,7 +20,7 @@ public class ReviewRepository {
         String sql = "SELECT * FROM recensioni";
         RowMapper<Review> rowMapper = (r, i) -> {
             Review rowObject = new Review();
-            rowObject.setDate(r.getDate("DATE"));
+            rowObject.setDate(r.getDate("PUBLISHINGDATE").toLocalDate());
             rowObject.setRating(r.getInt("RATING"));
             rowObject.setAuthor(r.getString("AUTHOR"));
             rowObject.setText(r.getString("TEXT"));
@@ -39,14 +39,26 @@ public class ReviewRepository {
         return jdbc.queryForObject(sql, Integer.class);
     }
 
-//    public Review getUserReview(String author) {
-//        String sql = "SELECT * FROM RECENSIONI WHERE AUTHOR=?";
-//        RowMapper<Review> rowMapper = (r, i) -> {
-//            Review rowObject = new Review();
-//            rowObject.setRating(r.getInt("RATING"));
-//            rowObject.setText(r.getString("TEXT"));
-//            return rowObject;
-//        };
-//        return jdbc.queryForObject(sql, rowMapper, author);
-//    }
+    public Review getUserReview(String author) {
+        String sql = "SELECT * FROM RECENSIONI WHERE AUTHOR=?";
+        RowMapper<Review> rowMapper = (r, i) -> {
+            Review rowObject = new Review();
+            rowObject.setRating(r.getInt("RATING"));
+            rowObject.setText(r.getString("TEXT"));
+            rowObject.setDate(r.getDate("PUBLISHINGDATE").toLocalDate());
+            return rowObject;
+        };
+        return jdbc.queryForObject(sql, rowMapper, author);
+    }
+
+    public boolean userReviewed(String author) {
+        String sql = "SELECT COUNT(*) FROM RECENSIONI WHERE AUTHOR=?";
+        int count = jdbc.queryForObject(sql, Integer.class, author);
+        return count > 0;
+    }
+
+    public void updateReview(Review review) {
+        String sql = "UPDATE RECENSIONI SET TEXT=?, RATING=?, PUBLISHINGDATE=? WHERE AUTHOR=?";
+        jdbc.update(sql, review.getText(), review.getRating(), LocalDate.now(), review.getAuthor());
+    }
 }

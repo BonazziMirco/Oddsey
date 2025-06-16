@@ -1,21 +1,22 @@
 package unitn.bonazzi.oddssey.pojos;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Review {
     private String text;
     private int rating;
     private String author;
-    private Date date;
+    private LocalDate date;
 
     public Review() {
         this.text = "";
         this.rating = 0;
         this.author = "";
-        this.date = new Date();
+        this.date = LocalDate.now();
     }
 
-    public Review(String text, int rating, String author, Date date) {
+    public Review(String text, int rating, String author, LocalDate date) {
         this.text = text;
         this.rating = rating;
         this.author = author;
@@ -26,7 +27,7 @@ public class Review {
         this.text = text;
         this.rating = rating;
         this.author = author;
-        this.date = new Date();
+        this.date = LocalDate.now();
     }
 
     public String getText() {
@@ -53,11 +54,11 @@ public class Review {
         this.author = author;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

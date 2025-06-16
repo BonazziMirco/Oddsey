@@ -7,6 +7,7 @@
         <th scope="col" class="text-center">Squadra di casa</th>
         <th scope="col" class="text-center">Squadra ospite</th>
         <th scope="col" class="text-center">Pronostico</th>
+        <th scope="col" class="text-center" th:if="${done}">Indovinato</th>
     </tr>
     </thead>
     <tbody class="table-group-divider" id="table-body">
@@ -25,6 +26,10 @@
                 </datalist>
                 <label class="form-label">Scegliere 0, 1 o 2:</label>
             </div>
+        </td>
+        <td th:if="${done}" class="text-center">
+            <i th:if="${confirmations.get(iterStat.index)}" class = "bi bi-check-lg" style = "color: green"></i>
+            <i th:unless="${confirmations.get(iterStat.index)}" class = "bi bi-x-lg" style = "color: red"></i>
         </td>
     </tr>
     </tbody>

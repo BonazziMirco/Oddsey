@@ -3,20 +3,20 @@ package unitn.bonazzi.oddssey.requestBodies;
 import java.util.List;
 
 public class WagerRequest {
-    List<Integer> bets;
+    List<Integer> predictions;
 
     public WagerRequest() {
     }
 
-    public WagerRequest(List<Integer> bets) {
-        this.bets = bets;
+    public WagerRequest(List<Integer> predictions) {
+        this.predictions = predictions;
     }
 
-    public List<Integer> getBets() {
-        return bets;
+    public List<Integer> getPredictions() {
+        return predictions;
     }
 
-    public void setBets(List<Integer> bets) {
-        this.bets = bets;
+    public void setPredictions(List<Integer> predictions) {
+        this.predictions = predictions;
     }
 }

@@ -39,6 +39,7 @@ public class PublicController {
         this.newsRepository = newsRepository;
     }
 
+    // home page
     @GetMapping("/index")
     public String index(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -46,6 +47,7 @@ public class PublicController {
         return "public/index";
     }
 
+    // rowing sport page
     @GetMapping("/rowing")
     public String rowing(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -54,6 +56,7 @@ public class PublicController {
         return "public/sports/rowing";
     }
 
+    // rafting sport page
     @GetMapping("/rafting")
     public String rafting(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -62,6 +65,7 @@ public class PublicController {
         return "public/sports/rafting";
     }
 
+    // dragon boat racing sport page
     @GetMapping("/dragonBoatRacing")
     public String dragonBoatRacing(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -70,6 +74,7 @@ public class PublicController {
         return "public/sports/dragonBoatRacing";
     }
 
+    // page to display all reviews
     @GetMapping("/reviews")
     public String reviews(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -79,6 +84,7 @@ public class PublicController {
         return "public/reviews";
     }
 
+    // page with sponsors
     @GetMapping("/sponsors")
     public String sponsors(Authentication authentication, Model model) {
         boolean isLoggedIn = authentication != null && authentication.isAuthenticated();
@@ -86,6 +92,7 @@ public class PublicController {
         return "public/sponsors";
     }
 
+    // signup page
     @GetMapping("/signup")
     public String signup(Model model) throws JsonProcessingException {
         model.addAttribute("logged", false);
@@ -93,12 +100,15 @@ public class PublicController {
         return "userManagement/signup";
     }
 
+    // login page
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("logged", false);
         return "userManagement/login";
     }
 
+    // login failure controller
+    // shows the login page with an error message
     @PostMapping("/loginFailure")
     public String loginFailure(Model model) {
         model.addAttribute("logged", false);
@@ -106,6 +116,7 @@ public class PublicController {
         return "userManagement/login";
     }
 
+    // actual signup process
     @PostMapping("/addUser")
     public String addUser(@RequestParam String firstName,
                           @RequestParam String lastName,
@@ -131,6 +142,7 @@ public class PublicController {
         return returnPage;
     }
 
+    // determines which dashboard to show based on the user's role
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication) {
         String returnPage;
@@ -157,18 +169,21 @@ public class PublicController {
         return "dashboards/adminDashboard";
     }
 
+    // Logout page
     @GetMapping("/perform_logout")
     public String logoutPage(Model model) {
         model.addAttribute("logged", true);
         return "userManagement/logoutPage";
     }
 
+    // Logout functionality
     @GetMapping("/logout")
     public String logout(Authentication authentication) {
         authentication.setAuthenticated(false);
         return "public/index";
     }
 
+    // News endpoint
     @GetMapping(value = "/news", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<News> news(){

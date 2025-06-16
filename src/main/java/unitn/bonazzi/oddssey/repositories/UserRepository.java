@@ -18,13 +18,15 @@ public class UserRepository {
     private final JdbcTemplate jdbc;
     private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
+    private final PrizeRepository prizeRepository;
 
     public UserRepository(JdbcTemplate jdbc,
                           UserDetailsManager userDetailsManager,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, PrizeRepository prizeRepository) {
         this.jdbc = jdbc;
         this.userDetailsManager = userDetailsManager;
         this.passwordEncoder = passwordEncoder;
+        this.prizeRepository = prizeRepository;
     }
 
     public boolean userExists(String username) {
@@ -32,8 +34,9 @@ public class UserRepository {
     }
 
     public List<User>  getRankingList(){
-        String sql = "SELECT username, SUM(points) as tot_punti  FROM giornate GROUP BY username ORDER BY points DESC";
-
+        String sql = "SELECT users.username, SUM(points) as tot_punti  FROM giornate " +
+                "RIGHT OUTER JOIN users ON giornate.username = users.username " +
+                "GROUP BY users.username ORDER BY points DESC";
         RowMapper<User> rankingRowMapper = (r, i) -> {
             User user = new User();
             user.setUsername(r.getString("username"));
@@ -69,12 +72,10 @@ public class UserRepository {
         };
         User user = jdbc.queryForObject(sql,userRowMapper, username);
 
-        sql =   "SELECT COUNT(name) AS n_premi FROM PREMI WHERE winner = ? ";
-        RowMapper<Integer> intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_premi");
-        user.setPrizes(jdbc.queryForObject(sql,intRowMapper, username));
+        user.setPrizes(prizeRepository.getPrizeCount(username));
 
         sql =   "SELECT COUNT(*) AS n_giornate FROM giornate WHERE USERNAME = ?";
-        intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_giornate");
+        RowMapper<Integer> intRowMapper = (resultSet, rowNum) -> resultSet.getInt("n_giornate");
         user.setPlays(jdbc.queryForObject(sql, intRowMapper, username));
 
         sql =   "SELECT COUNT(*) AS n_giornate FROM giornate WHERE USERNAME = ?";
@@ -100,7 +101,7 @@ public class UserRepository {
     }
 
     public List<User> findAllUsers() {
-        String sql = "SELECT username FROM userdata";
+        String sql = "SELECT username FROM userdata ORDER BY username ASC";
         RowMapper<String> usernameRowMapper = (r, i) -> r.getString("username");
         List<String> usernames = jdbc.query(sql, usernameRowMapper);
         List<User> users = new ArrayList<>();

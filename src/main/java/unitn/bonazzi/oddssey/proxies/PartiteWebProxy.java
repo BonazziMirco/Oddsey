@@ -10,7 +10,6 @@ import unitn.bonazzi.oddssey.pojos.Team;
 import unitn.bonazzi.oddssey.configurations.OpenFeignConfig;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @FeignClient(name = "PartiteWeb",
@@ -34,7 +33,5 @@ public interface PartiteWebProxy {
     public abstract void createMatches(@RequestBody String sport);
 
     @PostMapping("/getResults")
-    public abstract List<Integer> getResults(@RequestParam String sport,
-                                             @RequestParam Date date,
-                                             @RequestParam List<Integer> predictions);
+    public abstract List<Integer> getResults(@RequestParam String sport, @RequestParam LocalDate date);
 }

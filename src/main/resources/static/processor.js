@@ -1,11 +1,15 @@
+// displays the tab currentrly viewed
 function setActiveTab(tab){
     document.getElementById(tab).setAttribute("class", "nav-link active")
 }
+
+// variation for the sport tab, which is a dropdown
 function setActiveSportTab(tab){
     document.getElementById(tab).setAttribute("class", "nav-link active")
     document.getElementById("sport-tab-list").setAttribute("class", "nav-link active dropdown-toggle")
 }
 
+// sets the dashboard to the selected tab
 function setDashboard(selection) {
     fetch(`/${selection}`)
         .then(function (response){
@@ -16,6 +20,9 @@ function setDashboard(selection) {
         })
         .then(function (html){
             document.getElementById("slate").innerHTML = html;
+            if(selection === "review"){
+                setDefaultRating();
+            }
         })
         .catch(function(error){
             console.log(error);
@@ -23,6 +30,7 @@ function setDashboard(selection) {
         })
 }
 
+// shows or hides the password in the input field
 function showPassword(id) {
     var x = document.getElementById(id);
     var y = document.getElementById(id+"Icon");
@@ -35,6 +43,8 @@ function showPassword(id) {
     }
 }
 
+// sets the rating for the review
+// modifies the stars shown in the review form
 function setRating(rating){
     var result = document.getElementById("rating");
     var emptyStar = "bi bi-star"
@@ -50,6 +60,8 @@ function setRating(rating){
     result.value = rating;
 }
 
+// matches the passwords
+// shows a message if the passwords match or not
 function matchPassword() {
     document.getElementById('messageMatch').style.display = 'none';
     var result;
@@ -71,14 +83,18 @@ function matchPassword() {
     return result;
 }
 
+// shows the password requirements
 function showMessage() {
     document.getElementById("message").style.display = "block";
 }
 
+// hides the password requirements
 function hideMessage() {
     document.getElementById("message").style.display = "none";
 }
 
+// validates the password according to the requirements
+// modifies the message shown
 function validatePassword() {
     var myInput = document.getElementById("password");
     var special = document.getElementById("special");
@@ -123,10 +139,14 @@ function validatePassword() {
     return result;
 }
 
+// validates the password on input
+// enables or disables the submit button based on the password validation
+// variation for the login form as it is shorter
 function validatePasswordLogin() {
     document.getElementById("submit-btn").disabled = !validatePassword();
 }
 
+// calculates the age based on the date of birth
 function calculate_age(dob) {
     // Calculate the difference in milliseconds between the current date and the provided date of birth
     var diff_ms = Date.now() - dob.getTime();
@@ -137,31 +157,16 @@ function calculate_age(dob) {
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
 
-function isValidDateFormat(dateStr) {
-    // Regular expression to match the format dd/MM/yyyy
-    const dateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-
-    // Test if the date string matches the regex
-    if (!dateRegex.test(dateStr)) {
-        return false; // Invalid format
-    }
-
-    // Split the date string into day, month, year
-    const [day, month, year] = dateStr.split('/').map(Number);
-
-    // Check the validity of the date using the JavaScript Date object
-    const date = new Date(year, month - 1, day); // Months are 0-based in JS
-    return date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day;
-}
-
-
+// validates the credentials on input in the registration form
+// checks the password, the match, the age and the year of birth
+// enables or disables the submit button based on the validation
 function validateCredentials(){
     var passwordCheck = validatePassword();
     var matchCheck = matchPassword();
-    var dateFormatCheck = isValidDateFormat(document.getElementById("birthdate").value);
-    console.log(document.getElementById("birthdate").value)
+
+    var year = document.getElementById("birthdate").value.split("-")[0];
+    var currentYear = new Date().getFullYear();
+    var yearOK = year >= 1900 && year <= currentYear;
     var ageCheck = calculate_age(new Date(document.getElementById("birthdate").value)) >= 18;
 
     if(!ageCheck && document.getElementById("birthdate").value !== ""){
@@ -170,14 +175,14 @@ function validateCredentials(){
         document.getElementById("ageAlert").style.display = "none";
     }
 
-    if (passwordCheck && matchCheck && //dateFormatCheck &&
-        ageCheck) {
+    if (passwordCheck && matchCheck && ageCheck && yearOK) {
         document.getElementById("submit-btn").disabled = false;
     } else{
         document.getElementById("submit-btn").disabled = true;
     }
 }
 
+// validates the password on input in the password change form
 function validatePasswordChange(){
     var passwordCheck = validatePassword();
     var matchCheck = matchPassword();
@@ -188,11 +193,14 @@ function validatePasswordChange(){
     }
 }
 
+// resets the form to its initial state
+// disables the submit button and hides the password match message
 function resetForm(){
     document.getElementById("submit-btn").disabled = true;
     document.getElementById("messageMatch").style.display = "none";
 }
 
+// sets the team selection options based on the selected sport
 function setTeamSelection(sport){
     let dataList = document.getElementById("datalistOptions");
     dataList.innerHTML = "";
@@ -206,6 +214,7 @@ function setTeamSelection(sport){
     });
 }
 
+// fetches the news from the server and displays them in the news section
 function getNews(){
     fetch(`/news`)
         .then(function (response){
@@ -235,6 +244,7 @@ function getNews(){
         })
 }
 
+// sets the interval for fetching news every 30 seconds
 let newsIntervalSet = false;
 function intervalNews(){
     getNews();
@@ -244,6 +254,7 @@ function intervalNews(){
     }
 }
 
+// promotes a user to admin
 function promote(userId) {
     fetch(`/promote`, {
         method: 'POST',
@@ -268,6 +279,7 @@ function promote(userId) {
         });
 }
 
+// changes the password of the user
 function changePassword() {
     fetch(`/setNewPassword`, {
         method: 'POST',
@@ -295,6 +307,7 @@ function changePassword() {
         });
 }
 
+// submits the wager predictions
 function submitWager() {
     fetch('/getResults', {
         method: 'POST',
@@ -302,7 +315,7 @@ function submitWager() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            bets: Array.from(document.getElementsByName("bet")).map(el => el.value)
+            predictions: Array.from(document.getElementsByName("bet")).map(el => el.value)
         })
     }).then(function (response) {
         if (response.status !== 200) {
@@ -311,10 +324,35 @@ function submitWager() {
         }
         return response.text();
     }).then(function (html) {
-        //document.getElementById("slate").innerHTML = html;
-        console.log("a");
+        document.getElementById("slate").innerHTML = html;
     }).catch(function (error) {
         console.log(error);
         document.getElementById("slate").innerHTML = "Error setting bets";
+    })
+}
+
+// sets the default rating for the review form
+// necessary to represent the rating of a review already submitted
+function setDefaultRating(){
+    setRating(document.getElementById("rating").value);
+}
+
+// assigns prizes to the users
+function assignPrizes(){
+    fetch('/assignPrizes')
+        .then(function (response) {
+        if (response.status !== 200) {
+            console.log(response.status);
+            throw new Error("Errore nell'assegnazione dei premi");
+        }
+        return response.json();
+    }).then(function (json) {
+        document.getElementById("assignButton").disabled = true;
+        document.getElementById("prize1").innerHTML=json[0];
+        document.getElementById("prize2").innerHTML=json[1];
+        document.getElementById("prize3").innerHTML=json[2];
+    }).catch(function (error) {
+        console.log(error);
+        document.getElementById("slate").innerHTML = "Error assigning prizes";
     })
 }

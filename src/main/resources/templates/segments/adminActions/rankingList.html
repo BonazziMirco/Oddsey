@@ -1,0 +1,17 @@
+<br>
+<table class="table table-striped table-hover table-dark">
+    <thead>
+    <tr>
+        <th scope="col" class="text-center">Posizione</th>
+        <th scope="col" class="text-center">Username</th>
+        <th scope="col" class="text-center">Punti totali</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr th:each="user, iterStat : ${userList}">
+        <th scope="row" class="text-center" th:text="${iterStat.index}+1"></th>
+        <td class="text-center" th:text="${user.username}"></td>
+        <td class="text-center" th:text="${user.points}"></td>
+    </tr>
+    </tbody>
+</table>
